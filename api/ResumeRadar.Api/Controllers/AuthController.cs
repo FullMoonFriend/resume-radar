@@ -24,7 +24,7 @@ public class AuthController : ControllerBase
     [HttpGet("login")]
     public IActionResult Login()
     {
-        var redirectUri = _config["ClientUrl"] ?? "/";
+        var redirectUri = string.IsNullOrEmpty(_config["ClientUrl"]) ? "/" : _config["ClientUrl"]!;
         return Challenge(new AuthenticationProperties { RedirectUri = redirectUri }, "GitHub");
     }
 
