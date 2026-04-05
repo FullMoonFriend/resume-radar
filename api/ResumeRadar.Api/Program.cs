@@ -7,12 +7,15 @@ using System.Security.Claims;
 using System.Text.Json;
 using ResumeRadar.Api.Data;
 using ResumeRadar.Api.Models;
+using ResumeRadar.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+
+builder.Services.AddSingleton<IPdfExtractor, PdfExtractor>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
