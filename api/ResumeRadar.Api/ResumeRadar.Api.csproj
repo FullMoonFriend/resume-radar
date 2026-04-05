@@ -8,10 +8,13 @@
   </PropertyGroup>
 
   <Target Name="BuildClient" BeforeTargets="Build" Condition="!Exists('wwwroot/index.html')">
-    <Exec Command="npm --prefix ../../client install" />
+    <Exec Command="npm --prefix ../../client ci" />
     <Exec Command="npm --prefix ../../client run build" />
     <RemoveDir Directories="wwwroot" />
-    <Exec Command="cp -r ../../client/dist wwwroot" />
+    <ItemGroup>
+      <ClientDist Include="../../client/dist/**/*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(ClientDist)" DestinationFolder="wwwroot/%(RecursiveDir)" />
   </Target>
 
   <ItemGroup>

@@ -74,12 +74,22 @@ async function analyze() {
 
     <p v-if="error" class="text-[#f47067] text-sm mb-3">{{ error }}</p>
 
+    <div v-if="loading" class="flex flex-col items-center gap-3 py-6">
+      <svg class="animate-spin h-8 w-8 text-[#4acaa8]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+      </svg>
+      <p class="text-[#768390] text-sm">Analyzing your resume against this posting...</p>
+      <p class="text-[#4d5566] text-xs">This usually takes 10-15 seconds</p>
+    </div>
+
     <button
-      :disabled="!jobPostingText.trim() || loading"
+      v-else
+      :disabled="!jobPostingText.trim()"
       class="w-full bg-[#4acaa8] text-[#0d1117] font-semibold text-[15px] py-3 rounded-md disabled:opacity-40 hover:bg-[#3db896] transition-colors"
       @click="analyze"
     >
-      {{ loading ? 'Analyzing...' : 'Analyze match' }}
+      Analyze match
     </button>
 
     <p v-if="remaining !== null" class="text-[#4d5566] text-xs font-mono text-center mt-2.5">

@@ -10,6 +10,9 @@ appsettings.Development.json
 node_modules/
 dist/
 
+# Build output
+wwwroot/
+
 # IDE
 .vs/
 .vscode/

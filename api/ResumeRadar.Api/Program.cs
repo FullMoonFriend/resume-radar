@@ -23,6 +23,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/api/auth/login";
         options.LogoutPath = "/api/auth/logout";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+            ? CookieSecurePolicy.None
+            : CookieSecurePolicy.Always;
         options.Events.OnRedirectToLogin = context =>
         {
             context.Response.StatusCode = 401;
@@ -85,7 +90,18 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var connStr = app.Configuration.GetConnectionString("Default") ?? "";
+    var dbPath = connStr.Replace("Data Source=", "");
+    var dbDir = Path.GetDirectoryName(dbPath);
+    if (!string.IsNullOrEmpty(dbDir)) Directory.CreateDirectory(dbDir);
     db.Database.Migrate();
+}
+
+// Serve Vue SPA in production
+if (!app.Environment.IsDevelopment())
+{
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
 }
 
 app.UseAuthentication();
@@ -93,11 +109,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Serve Vue SPA in production
 if (!app.Environment.IsDevelopment())
 {
-    app.UseDefaultFiles();
-    app.UseStaticFiles();
     app.MapFallbackToFile("index.html");
 }
 

@@ -54,6 +54,18 @@ public class AnalysisService : IAnalysisService
 
     public static AnalysisResult ParseAnalysisResponse(string json)
     {
+        // Strip markdown code fences if Claude wraps the JSON in them
+        json = json.Trim();
+        if (json.StartsWith("```"))
+        {
+            var firstNewline = json.IndexOf('\n');
+            if (firstNewline >= 0)
+                json = json[(firstNewline + 1)..];
+            if (json.EndsWith("```"))
+                json = json[..^3];
+            json = json.Trim();
+        }
+
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var parsed = JsonSerializer.Deserialize<AnalysisResponseJson>(json, options)
             ?? throw new JsonException("Failed to parse analysis response");
