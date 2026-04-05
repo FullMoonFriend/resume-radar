@@ -7,6 +7,13 @@
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
+  <Target Name="BuildClient" BeforeTargets="Build" Condition="!Exists('wwwroot/index.html')">
+    <Exec Command="npm --prefix ../../client install" />
+    <Exec Command="npm --prefix ../../client run build" />
+    <RemoveDir Directories="wwwroot" />
+    <Exec Command="cp -r ../../client/dist wwwroot" />
+  </Target>
+
   <ItemGroup>
     <PackageReference Include="Anthropic.SDK" Version="5.10.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.*">

@@ -92,4 +92,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Serve Vue SPA in production
+if (!app.Environment.IsDevelopment())
+{
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
+    app.MapFallbackToFile("index.html");
+}
+
 app.Run();
