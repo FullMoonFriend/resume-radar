@@ -16,6 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
 builder.Services.AddSingleton<IPdfExtractor, PdfExtractor>();
+builder.Services.AddScoped<IAnalysisService, AnalysisService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
