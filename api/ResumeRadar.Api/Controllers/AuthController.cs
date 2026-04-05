@@ -13,13 +13,19 @@ namespace ResumeRadar.Api.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly AppDbContext _db;
+    private readonly IConfiguration _config;
 
-    public AuthController(AppDbContext db) => _db = db;
+    public AuthController(AppDbContext db, IConfiguration config)
+    {
+        _db = db;
+        _config = config;
+    }
 
     [HttpGet("login")]
     public IActionResult Login()
     {
-        return Challenge(new AuthenticationProperties { RedirectUri = "/" }, "GitHub");
+        var redirectUri = _config["ClientUrl"] ?? "/";
+        return Challenge(new AuthenticationProperties { RedirectUri = redirectUri }, "GitHub");
     }
 
     [HttpPost("logout")]
