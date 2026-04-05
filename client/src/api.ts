@@ -51,7 +51,7 @@ async function request<T>(url: string, options?: RequestInit): Promise<T> {
     throw new Error(body.error || `Request failed: ${res.status}`)
   }
   const text = await res.text()
-  return text ? JSON.parse(text) : undefined
+  return text ? JSON.parse(text) : (undefined as T)
 }
 
 export const api = {
